@@ -10,7 +10,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     安装 react-app-rewired
 
     npm install react-app-rewired@1.6.2 --save-dev
-    注意！！ react-app-rewired2.x以后，不再支持injectBabelPlugin的方式，需要安装customize-cra    
+    注意！！ react-app-rewired2.x以后，不再支持injectBabelPlugin的方式，需要安装customize-cra 
+    customize-cra地址
+    https://npm.taobao.org/package/customize-cra 
     在根目录新建 config-overrides.js 文件 【对webpack配置进行覆盖】
 
     修改package.json文件
@@ -240,6 +242,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 
 ## react-redux
+    说明博客: [阮一峰] http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_three_react-redux.html
+    
     import { Provider } from 'react-redux';
     用来全局绑定store
     用Provider包裹最外出的组件，这样就可以吧store绑定到全局，这样内部的所有组件就可以接受到store的值
@@ -272,6 +276,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
         }
     }
 
+    connect默认会把绑定的数据和执行动作的方法传递到 component 内不的props里 
+    this.props.state // 数据状态
+    this.props.dispatch // 动作方法
+
     ####
     【mapStateToProps】 
         负责输入逻辑，即将state映射到 UI 组件的参数 (props) 中，
@@ -281,6 +289,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
         个人解读: 就是把全局的state内的数据拿出来，绑定到Component内的porps上。
                  且只有绑定过的数据才能在全局数据变化后进行实时数据的更新，来同步重新渲染dome。
+                 mapStateToProps可以不传，如果不传，组件不会监听store的变化，也就是说Store的更新不会引起UI的更新 
 
         eg:  const mapStateToProps = (state) => ({ userInfo: state.userInfo })
              就可以在 Component 内通过 
