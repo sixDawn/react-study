@@ -51,18 +51,32 @@ const rewiredMap = () => config => {
 const entriesPath = globby.sync([resolveApp('src') + '/*/index.js'], {cwd: process.cwd()});
 console.log(entriesPath)
 
+<<<<<<< HEAD
 /* const multipleEntry = require('react-app-rewire-multiple-entry')([
   {
     entry: 'src/page/index.js',
+=======
+const multipleEntry = require('react-app-rewire-multiple-entry')([
+  {
+    entry: 'src/index/index.js',
+>>>>>>> dcd0a2727e831a383369138f2330e98be9024ead
     template: 'public/index.html',
     outPath: '/index.html'
   },
   {
+<<<<<<< HEAD
     entry: 'src/page/login.js',
     template: 'public/index.html',
     outPath: '/login.html'
   }
 ]); */
+=======
+    entry: 'src/login/index.js',
+    template: 'public/index.html',
+    outPath: '/login.html'
+  }
+]);
+>>>>>>> dcd0a2727e831a383369138f2330e98be9024ead
 
 module.exports = {
   webpack: override(
@@ -93,7 +107,11 @@ module.exports = {
     addBabelPlugin(
       ["@babel/plugin-proposal-decorators", { "legacy": true }]
     ),
+<<<<<<< HEAD
     // multipleEntry.addMultiEntry
+=======
+    multipleEntry.addMultiEntry
+>>>>>>> dcd0a2727e831a383369138f2330e98be9024ead
     // setEntries(),
     // addDecoratorsLegacy(), 
     // supportMultiPage()  
