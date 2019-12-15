@@ -6,6 +6,7 @@ import store from './views/CartList/store';
 
 // window.store = store
 
+
 export default class App extends Component {
   render() {
     return (
