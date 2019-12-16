@@ -23,8 +23,7 @@ class SiderMenu extends Component {
         collapsed={this.state.collapsed} 
         onCollapse={this.onCollapse}
         style={{
-          overflow: 'auto',
-          height: '100vh',
+          overflow: 'auto'
         }}>
         <div className="logo" />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>

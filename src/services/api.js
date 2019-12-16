@@ -33,3 +33,35 @@ export const ChangePwd = data => {
         data: data
     })
 }
+
+export const SelectDocument = data => {
+    return service({
+        url: INTER.selectDocument,
+        method: 'get',
+        data: data
+    })
+}
+
+export const SelectDictionaryType1 = data => {
+    return service({
+        url: INTER.selectDictionaryType1,
+        method: 'get',
+        data: data
+    })
+}
+
+export const SelectAdminList = data => {
+    return service({
+        url: INTER.selectAdminList,
+        method: 'get',
+        data: data
+    })
+}
+
+export const SelectDictionary = data => {
+    return service({
+        url: INTER.selectDictionary,
+        method: 'get',
+        data: data
+    })
+}

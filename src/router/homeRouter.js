@@ -15,7 +15,6 @@ function getRouterList() {
 }
 
 class HomeRouter extends Component {
-   statx = '/home'
    render() {
       const routers = getRouterList();
       return(

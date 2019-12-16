@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import Login from '@views/login'
 import Home from '@views/home'
 
-
 class App extends Component {
 
   componentDidMount () {

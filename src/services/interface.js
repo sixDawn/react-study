@@ -6,6 +6,12 @@ export const Dictionary = `${root}/Admin/dictionary` // 字典
 export const updateAdmin = `${root}/Admin/updateAdmin` // 更改用户信息
 export const changePwd = `${root}/Admin/change_pwd` // 修改密码
 
+
+export const selectDictionaryType1 = `${root}/Admin/selectDictionaryType1` // 文件类型
+export const selectAdminList = `${root}/Admin/selectAdminList` // 拟办人
+export const selectDocument = `${root}/Index/selectDocument` // 来文管理_列表
+export const selectDictionary = `${root}/Admin/selectDictionary`  // 词典
+
 /* export const LOGIN = `${root}/Login/logindo` // 登录 */
 
 

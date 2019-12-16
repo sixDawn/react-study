@@ -9,31 +9,37 @@ import { setUserInfo } from "@/redux/actions/userInfo";
 
 class LoginForm extends React.Component {
   
+  constructor (props) {
+    super(props)
+    this.state = {
+      loginLoading: false
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({
+          loginLoading: true
+        })
         values.token = '';
-        const userInfo = {"adminId":"1","adminName":"admin","adminPwd":"25d55ad283aa400af464c76d713c07ad","adminAccount":"admin","userType":"1","timeOut":"2019-12-10 21:23:57","token":"b93c59e4b8e818305f56746535ffda368c4167f1","status":"1","role":{"id":"1","name":"用户","auth":"0"},"loginStatus":1}
-
-        const { setUserInfo } = this.props;
-        setUserInfo(userInfo);
-        if (1) return ''
+        
         LOGIN(values).then(res => {
+          this.setState({
+            loginLoading: false
+          })
           if (res.data.token) {
             const { setUserInfo } = this.props;
             setUserInfo(res.data);
-            setTimeout(() => {
-              this.props.history.push({
-                pathname: '/'
-              });
-            }, 0);
-
+            // this.props.history.push({ pathname: '/' });
           } else {
             message.error('用户名或密码错误');
           }
-        }).catch(res => {
-          console.log(res)
+        }).catch(error => {
+          this.setState({
+            loginLoading: false
+          })
         })
       }
     });
@@ -41,6 +47,10 @@ class LoginForm extends React.Component {
 
   componentDidMount() {
     // console.log(this.props)
+  }
+
+  componentWillUnmount() {
+    
   }
 
   render() {
@@ -86,6 +96,7 @@ class LoginForm extends React.Component {
                 type="primary"
                 size="large"
                 htmlType="submit"
+                loading={this.state.loginLoading}
                 className="login-form-button">
                 登录
               </Button>

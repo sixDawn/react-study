@@ -34,22 +34,15 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-      /* // IE 9
-      if (response.data == null 
-          && response.config.responseType === 'JSON' 
-          && response.request.responseText != null) {
-        try {
-          response.data = JSON.parse(response.request.responseText);
-        } catch (e) {
-        }
-      }
-      return response; */
       if (response.status === 200) {
         let data = response.data || JSON.parse(response.request.responseText)
         let stateCode = data.status || data.code
         let res
         switch (stateCode) {
           case 200: // 成功状态时，直接将数据返回
+            res = data
+            return data;
+          case 1: // 成功状态时，直接将数据返回
             res = data
             return data;
           case 2001:
