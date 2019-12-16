@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { increment, decrement } from './actions/cart'
 
 class CartList extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             cartList:[]
         }

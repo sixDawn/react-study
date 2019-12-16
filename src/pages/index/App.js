@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { getDictionary } from "@/redux/actions/dictionary";
 
 import Login from '@views/login'
 import Home from '@views/home'
 
-
 class App extends Component {
 
   componentDidMount () {
-    // console.log('App', this.props)
+    this.props.getDictionary()
   }
 
   render() {
@@ -35,13 +35,11 @@ class App extends Component {
 
 
 const mapStateToProps = (state) => {
-  // console.log('state',state)
   return {
     userInfo: state.userInfo
   }
 }
-export default connect(mapStateToProps)(App)
-
+export default connect(mapStateToProps, { getDictionary })(App)
 
 /* <Route path='/login' component={Login}/>
   <Route path='/' component={Home}/>*/
