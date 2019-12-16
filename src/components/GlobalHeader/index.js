@@ -4,7 +4,9 @@ import { Layout, Avatar, Dropdown, Icon, Menu, Spin, Modal } from 'antd';
 import styles from './style.module.less';
 import avatarImg from '@/assets/images/default.jpg';
 
-import { removeStorage } from '@utils/storage';
+/* import { removeStorage } from '@utils/storage'; */
+import { setUserInfo } from "@/redux/actions/userInfo";
+
 
 const { Header } = Layout;
 const confirm = Modal.confirm
@@ -32,13 +34,8 @@ class GlobalHeader extends Component {
           okText: '确认',
           cancelText: '取消',
           onOk: () => {
-            // const {dispatch} = this.props;
-            // dispatch(setUserInfo(null));
-
-            // setUserInfo(null);
             const {setUserInfo} = this.props;
             setUserInfo('')
-
           },
           onCancel: () => {}
         });
@@ -87,18 +84,7 @@ class GlobalHeader extends Component {
   }
 }
 
-function setUserInfo(data) {
-    removeStorage('userInfo');
-    return ({ 
-        type: 'USER_INFO',
-        userInfo: data 
-    })
-}
-
 
 const mapStateToProps = (state) => ({ userInfo: state.userInfo})
-const mapDispatchToProps = (dispatch) => {
-  return ({ setUserInfo: (data) => dispatch(setUserInfo(data))}) 
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalHeader) 
+export default connect(mapStateToProps, { setUserInfo })(GlobalHeader) 

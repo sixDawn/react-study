@@ -1,11 +1,11 @@
-import Login from '@page/login/login'
+import Login from '@views/login'
 
-import Home from '@page/home/home'
-import pageList from '@page/pageList/pageList';
-import dictionaryList from '@page/dictionaryList/dictionaryList';
+import Home from '@views/home'
+import pageList from '@views/pageList';
+import dictionaryList from '@views/dictionaryList';
 
-import personalSettings from '@page/personalSettings/index';
-import changpwd from '@page/changpwd/index';
+import personalSettings from '@views/personalSettings';
+import changpwd from '@views/changpwd';
 
 const RouterList = [
     {

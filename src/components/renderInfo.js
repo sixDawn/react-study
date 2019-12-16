@@ -1,8 +1,6 @@
 import React from 'react';
 import AntdEmpty from '@components/ant/Empty/Empty'
 
-
-
 class RenderInfo extends React.Component {
   static defaultProps = {
     emptyState: null,
