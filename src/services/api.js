@@ -49,7 +49,6 @@ export const SelectAdminList = data => {
     })
 }
 
-<<<<<<< HEAD
 export const Dictionary = data => {
     return service({
         url: INTER.dictionary,
@@ -59,8 +58,6 @@ export const Dictionary = data => {
 }
 
 // 字典
-=======
->>>>>>> eb35aee85c3014cf7e6d4a0a447a44ef534a637f
 export const SelectDictionary = data => {
     return service({
         url: INTER.selectDictionary,
