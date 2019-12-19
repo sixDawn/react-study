@@ -84,7 +84,10 @@ export default class AntFromItem extends Component {
         tag: 'input',
         autoComplete: 'off',
         placeholder: '',
+<<<<<<< HEAD
         // defaultValue: '',
+=======
+>>>>>>> eb35aee85c3014cf7e6d4a0a447a44ef534a637f
         rules: [],
         disabled: false,
         loading: false,
