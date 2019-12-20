@@ -1,3 +1,5 @@
+// import { SelectDictionaryType1, SelectAdminList, SelectDictionary } from '@/services/api'
+
 export const FromConfig = [
     {
         name:'title',
@@ -45,11 +47,21 @@ export const FromConfig = [
     }, {
         name:'startDate',
         placeholder: '选择日期',
-        options: []
+        tag: 'DatePicker'
     }, {
         name:'endDate',
         placeholder: '选择日期',
-        options: []
+        tag: 'DatePicker'
     },
 ]
 
+
+const getFromConfig = async (token) => {
+    // let data = { token: this.state.token };
+    // let arr = await SelectDictionaryType1(data);
+
+    // let apiArr = [SelectDictionaryType1(data), SelectAdminList(data), SelectDictionary(data)];
+}
+
+
+export default getFromConfig

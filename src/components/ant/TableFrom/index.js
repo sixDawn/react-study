@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { Form, Row, Col, Button, Icon } from 'antd'
 import AntFromItem from '@components/ant/FromItem'
 
-import { SelectDictionaryType1, SelectAdminList, SelectDictionary } from '@/services/api'
-import { getStorage } from '@utils/storage'
 
 import styles from './index.module.less'
-
 
 class TableFrom extends Component {
   constructor(props) {
@@ -18,69 +15,7 @@ class TableFrom extends Component {
   }
 
   componentDidMount () {
-    this.getSelectOptions();
-  }
-
-  getSelectOptions = () =>  {
-    let data = { token: getStorage('userInfo').token };
-    let apiArr = [SelectDictionaryType1(data), SelectAdminList(data), SelectDictionary(data)];
     
-    Promise.all(apiArr).then(res => {
-      const communicationTypeArr = res[0].data[0].children;
-      const adminIdArr = res[1].data;
-      const dictionaryArr = res[2].data[0].children;
-
-      this.communicationTypeArr = communicationTypeArr
-      this.adminIdArr = adminIdArr
-
-      let rankSelect = [];
-      let urgencySelect = [];
-
-      dictionaryArr.map(item => {
-        if (item.label === "密级" || item.rank === 'rank') {
-          rankSelect = item.children
-        } else if (item.label === "紧急程度" || item.rank === 'urgency') {
-          urgencySelect = item.children
-        }
-        return item
-      });
-
-      const FromItemArr = this.state.FromItemArr.map(item => {
-        let name = item.name;
-        switch (name) {
-          case 'communicationTypeArr':
-            item.options = communicationTypeArr;
-            break;
-          case 'adminId':
-            const options = adminIdArr.map(item => {
-              item.value = item.adminId
-              item.text = item.adminName
-              return item
-            })
-            item.options = options;
-            item.loading = false;
-            break;
-          case 'rank':
-            item.options = rankSelect;
-            item.loading = false;
-            break;
-          case 'urgency':
-            item.options = urgencySelect;
-            item.loading = false;
-            break;
-          default:
-            break;
-        }
-        return item
-      })
-      
-      this.setState({
-        FromItemArr: FromItemArr
-      })
-
-      return FromItemArr
-
-    }).catch(error => { });
   }
 
   toggleForm = (isOpen) => {
@@ -88,7 +23,6 @@ class TableFrom extends Component {
       isBtnGroupUp: !this.state.isBtnGroupUp
     })
   }
-
 
   // 搜索
   handleSearch = (e) => {
@@ -104,9 +38,8 @@ class TableFrom extends Component {
   handleFormReset = () => {
     const { form } = this.props
     form.resetFields()
-    this.props.handleSearch()
+    this.props.handleFormReset()
   }
-
 
   render () {
     const { getFieldDecorator } = this.props.form;
@@ -150,6 +83,5 @@ class TableFrom extends Component {
     )
   }
 }
-
 
 export default Form.create()(TableFrom)

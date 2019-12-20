@@ -4,9 +4,12 @@ export const TableConfig = [
     {
         title: 'ID',
         dataIndex: 'id',
-        defaultSortOrder: 'descend',
-        sorter: (a, b) => a.id - b.id,
-        width: 70
+        // defaultSortOrder: 'descend',
+        width: 70,
+        sorter: true,
+        // sorter: (a, b) => a.id - b.id,
+        // sortOrder: sortedInfo.columnKey === 'id' && sortedInfo.order,
+        ellipsis: true
     }, {
         title: '标题',
         dataIndex: 'title',
@@ -41,9 +44,13 @@ export const TableConfig = [
         }
     }, {
         title: '收文号',
+        sorter: true,
         dataIndex: 'num',
     },  {
         title: '操作',
         width: 198,
+        render: (text, record, index) => {
+            return '<div>1644</div>'
+        }
     },
 ]

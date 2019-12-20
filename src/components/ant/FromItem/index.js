@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Form, Input, Select, Cascader } from 'antd'
+import { Form, Input, Select, Cascader, DatePicker } from 'antd'
 import './style.less'
-
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
 function setItem(props){
-    const { getFieldDecorator, tag, label, placeholder, autoComplete, name } = props;
+    const { defaultValue, getFieldDecorator, tag, label, placeholder, onChange, 
+            autoComplete, name, dateFormat } = props;
     switch (tag) {
         case 'input':
             return (
@@ -29,7 +30,7 @@ function setItem(props){
                 <FormItem label={label}>
                     {getFieldDecorator(name, {
                         rules: props.rules,
-                        initialValue: props.defaultValue
+                        initialValue: props.defaultValue || undefined
                     })(
                         <Select
                             placeholder={placeholder} 
@@ -41,7 +42,7 @@ function setItem(props){
                                 props.options.map((item, index) => {
                                     return (
                                         <Option key={index} 
-                                                value={item.value} 
+                                                value={item.val || item.value} 
                                                 disabled={item.disabled}>
                                             {item.text || item.label || item.value}
                                         </Option>
@@ -64,11 +65,26 @@ function setItem(props){
                             options={props.options}
                             expandTrigger={props.expandTrigger}
                             displayRender={props.displayRender}
-                            onChange={props.onChange}
+                            onChange={onChange}
                         />
                     )}
                 </FormItem>
             );
+        case 'DatePicker':
+            return (
+                <FormItem label={label}>
+                    {getFieldDecorator(name, {
+                        rules: props.rules,
+                        initialValue: defaultValue ? moment(defaultValue, dateFormat || 'YYYY-MM-DD') : null,
+                    })(
+                    <DatePicker 
+                        // defaultValue={defaultValue ? moment(defaultValue, 'YYYY-MM-DD') : null }
+                        placeholder={placeholder}
+                        format={dateFormat}
+                        valueFormat={'YYYY-MM-DD'}/>
+                    )}
+                </FormItem>
+            )
         default:
             return (
                 <span></span>
@@ -90,13 +106,18 @@ export default class AntFromItem extends Component {
         loading: false,
         options: [], // select
         allowClear: true, // 支持清除
-        expandTrigger: "click", // hover
+        expandTrigger: 'click', // hover
         getFieldDecorator: () => {},
         handleChange: () => {},
         // Cascader选择后展示的渲染函数
         displayRender: (label, selectedOptions) => { 
             return label.join(' / ')
         },
+        dateFormatList: ['DD/MM/YYYY', 'DD/MM/YY'],
+        dateFormat: 'YYYY/MM/DD',
+        onDateChange: (date, dateString) => {
+            console.log(date, dateString);
+        }
     }
 
     componentDidMount () { }

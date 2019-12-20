@@ -16,3 +16,14 @@ export const getDectionaryLable = id => {
     }
     
 }
+
+
+export function objIsEmpty(obj){
+    for (let key in obj) {
+        return false;
+    }
+    return true;
+
+    // JSON.stringify(obj) === '{}'
+    // Object.keys(obj).length == 0
+}
