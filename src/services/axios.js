@@ -56,6 +56,9 @@ service.interceptors.response.use(
       }
     },
     error => {
+      if (!error.response) {
+        return Promise.reject(error);
+      }
       if (error.response.status) {
         switch (error.response.status) {
           case 500:
