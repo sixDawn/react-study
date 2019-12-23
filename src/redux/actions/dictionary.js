@@ -9,8 +9,9 @@ export const getDictionaryAction = (data) => ({
 })
 
 export const getDictionary = () => {
+    const token = getStorage('userInfo') ? getStorage('userInfo').token : ''
     return (dispatch)=> {
-        Dictionary({token: getStorage('userInfo').token}).then(res => {
+        Dictionary({token: token}).then(res => {
             const action = getDictionaryAction(res.data);
             dispatch(action)
         })

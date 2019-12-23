@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Form, Row, Col, Button, Icon } from 'antd'
 import AntFromItem from '@components/ant/FromItem'
 
-
 import styles from './index.module.less'
 
 class TableFrom extends Component {
@@ -35,10 +34,17 @@ class TableFrom extends Component {
   }
 
   // 重置
-  handleFormReset = () => {
+  handleFormReset = (e) => {
+    e.preventDefault()
     const { form } = this.props
     form.resetFields()
-    this.props.handleFormReset()
+    
+    let vals = form.getFieldsValue();
+    Object.keys(vals).forEach((key) => {
+      vals[key] && (vals[key] = null)
+    });
+
+    this.props.handleFormReset(vals);
   }
 
   render () {

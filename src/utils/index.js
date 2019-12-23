@@ -27,3 +27,4 @@ export function objIsEmpty(obj){
     // JSON.stringify(obj) === '{}'
     // Object.keys(obj).length == 0
 }
+

@@ -4,7 +4,6 @@ import { Layout, Avatar, Dropdown, Icon, Menu, Spin, Modal } from 'antd';
 import styles from './style.module.less';
 import avatarImg from '@/assets/images/default.jpg';
 
-/* import { removeStorage } from '@utils/storage'; */
 import { setUserInfo } from "@/redux/actions/userInfo";
 
 
@@ -14,7 +13,6 @@ const confirm = Modal.confirm
 class GlobalHeader extends Component {
 
   componentDidMount () {
-    // console.log(this.props)
   }
 
   handleMenuClick = (e) => {

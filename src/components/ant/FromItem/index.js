@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { Form, Input, Select, Cascader, DatePicker } from 'antd'
-import './style.less'
+import { Form, Input, Select, Cascader, DatePicker, InputNumber } from 'antd'
 import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-function setItem(props){
-    const { defaultValue, getFieldDecorator, tag, label, placeholder, onChange, 
-            autoComplete, name, dateFormat } = props;
+
+function setinput(props) {
+    const { defaultValue, getFieldDecorator, tag, placeholder, onChange, 
+        autoComplete, name, dateFormat, rules } = props;
     switch (tag) {
         case 'input':
             return (
-                <FormItem label={label}>
+                <span>
                     {getFieldDecorator(name, {
-                        rules: props.rules,
+                        rules: rules,
                         initialValue: props.defaultValue || ''
                     })(
                         <Input 
@@ -23,13 +23,29 @@ function setItem(props){
                             placeholder={placeholder}
                             disabled={props.disabled}/>
                     )}
-                </FormItem>
+                </span>
+            )
+        case 'inputNumber':
+            return(
+                <span>
+                    {getFieldDecorator(name, {
+                        rules: rules,
+                        initialValue: props.defaultValue || ''
+                    })(
+                        <InputNumber 
+                            type={props.type}
+                            autoComplete={autoComplete} 
+                            placeholder={placeholder}
+                            min={props.min}
+                            disabled={props.disabled}/>
+                    )}
+                </span>
             );
         case 'select':
             return (
-                <FormItem label={label}>
+                <span>
                     {getFieldDecorator(name, {
-                        rules: props.rules,
+                        rules: rules,
                         initialValue: props.defaultValue || undefined
                     })(
                         <Select
@@ -51,13 +67,13 @@ function setItem(props){
                             }
                         </Select>
                     )}
-                </FormItem>
+                </span>
             );
         case 'cascader': 
             return (
-                <FormItem label={label}>
+                <span>
                     {getFieldDecorator(name, {
-                        rules: props.rules,
+                        rules: rules,
                         initialValue: props.defaultValue
                     })(
                         <Cascader
@@ -68,13 +84,13 @@ function setItem(props){
                             onChange={onChange}
                         />
                     )}
-                </FormItem>
-            );
+                </span>
+            )
         case 'DatePicker':
             return (
-                <FormItem label={label}>
+                <span>
                     {getFieldDecorator(name, {
-                        rules: props.rules,
+                        rules: rules,
                         initialValue: defaultValue ? moment(defaultValue, dateFormat || 'YYYY-MM-DD') : null,
                     })(
                     <DatePicker 
@@ -83,13 +99,23 @@ function setItem(props){
                         format={dateFormat}
                         valueFormat={'YYYY-MM-DD'}/>
                     )}
-                </FormItem>
+                </span>
             )
         default:
             return (
                 <span></span>
             )
     }
+}
+
+
+function setItem(props){
+    const { label, style, className } = props;
+        return (
+            <FormItem label={label} style={style} className={className}>
+                {setinput(props)} 
+            </FormItem>
+        )
 }
 
 export default class AntFromItem extends Component {
