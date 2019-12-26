@@ -1,4 +1,3 @@
-@import "~antd/dist/antd";
 
 body {
   margin: 0;
@@ -15,50 +14,6 @@ body {
     "Microsoft YaHei",
     SimSun,
     sans-serif;
-}
-
-:global {
-  .link-button {
-    color: @primary-color;
-    text-decoration: none;
-    background-color: transparent;
-    outline: none;
-    cursor: pointer;
-    -webkit-transition: color 0.3s;
-    transition: color 0.3s;
-    -webkit-text-decoration-skip: objects;
-
-    &:focus {
-      text-decoration: underline;
-      text-decoration-skip: inherit;
-    }
-
-    &:hover {
-      color: @link-hover-color;
-    }
-
-    &:active {
-      color: @link-active-color;
-    }
-
-    &:active,
-    &:hover {
-      text-decoration: @link-hover-decoration;
-      outline: 0;
-    }
-
-    &[disabled] {
-      color: @disabled-color;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-  }
-
-  .ant-tag {
-    cursor: pointer !important;
-  }
-
-  
 }
 
 .tabel-base-wrap {

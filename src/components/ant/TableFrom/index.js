@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Form, Row, Col, Button, Icon } from 'antd'
 import AntFromItem from '@components/ant/FromItem'
 
-
 import styles from './index.module.less'
 
 class TableFrom extends Component {
@@ -35,21 +34,24 @@ class TableFrom extends Component {
   }
 
   // 重置
-  handleFormReset = () => {
-    const { form } = this.props
-    form.resetFields()
-    this.props.handleFormReset()
+  handleFormReset = (e) => {
+    e.preventDefault();
+    const { form } = this.props;
+    form.resetFields();
+    
+    let vals = form.getFieldsValue();
+    this.props.handleFormReset(vals);
   }
 
   render () {
     const { getFieldDecorator } = this.props.form;
+    const { isBtnGroupUp } = this.state;
     const FromItemArr = [...this.state.FromItemArr];
-    if (!this.state.isBtnGroupUp) {
-      FromItemArr.length = 3
-    }
+    
     return (
       <Form onSubmit={this.handleSearch} layout='inline' className={styles.tableListForm}>
-        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
+        <Row gutter={{ md: 6, lg: 24, xl: 48 }}
+          className={`${isBtnGroupUp ? 'fromWrapOpen' : 'fromWrapRetract'}`}>
           {
             FromItemArr.map((item, index) => {
               let params = {...item, getFieldDecorator}
@@ -61,7 +63,7 @@ class TableFrom extends Component {
             })
           }
           <Col md={6} sm={24} 
-               className={`text-align-right ${this.state.isBtnGroupUp ? 'btnGroupDown' : 'btnGroupUp'}`}>
+               className={`text-align-right btnGroup`}>
             <span className={styles.submitButtons}>
               <Button type='primary' htmlType='submit'>
                   查询

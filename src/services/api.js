@@ -65,3 +65,61 @@ export const SelectDictionary = data => {
         data: data
     })
 }
+
+
+export const FindLastNum = data => {
+    return service({
+        url: INTER.findLastNum,
+        method: 'post',
+        data: data
+    })
+}
+
+export const SelectDictionaryType = data => {
+    return service({
+        url: INTER.selectDictionaryType,
+        method: 'get',
+        data: data
+    })
+}
+
+export const AddDocument = data => {
+    return service({
+        url: INTER.addDocument,
+        method: 'post',
+        data: data
+    })
+}
+
+export const DocumentDel = data => {
+    return service({
+        url: INTER.documentDel,
+        method: 'post',
+        data: data
+    })
+}
+
+
+export const UploadFile = data => {
+    return service({
+        url: INTER.uploadFile,
+        method: 'post',
+        data: data
+    })
+}
+
+export const FileType = data => {
+    return service({
+        url: INTER.uploadFile,
+        method: 'get',
+        params: data
+    })
+}
+
+export const EditDocument = data => {
+    return service({
+        url: INTER.editDocument,
+        method: 'post',
+        data: data
+    })
+}
