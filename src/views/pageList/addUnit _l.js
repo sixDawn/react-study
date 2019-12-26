@@ -1,9 +1,9 @@
 import React from 'react';
-import { Form, Button, message } from 'antd';
+import { Modal, Form, Button } from 'antd';
 import AntFromItem from '@components/ant/FromItem';
 import styles from "./style.module.less";
 import { getAddUnitFromConfig, getSelectOptions } from './fromConfig'
-import { FindLastNum, AddDocument, EditDocument, DocumentDel } from '@/services/api'
+import { FindLastNum, AddDocument } from '@/services/api'
 
 import AntModal from "@components/ant/Modal";
 
@@ -14,24 +14,15 @@ class addUnit extends React.Component {
     this.state = {
       token: props.token,
       title: props.title,
-      width: 1000,
+      width: props.width || 600,
       visible: false,
-      confirmLoading: false,
+      loading: false,
       fromConfig: getAddUnitFromConfig(this),
-      formVal: {}
     }
   }
 
   async componentDidMount () {
     await this.setSelectOptions();
-  }
-
-  componentWillUnmount () {
-
-  }
-
-  componentDidUpdate() {
-    this.props.onRef(this);
   }
 
   /**
@@ -44,9 +35,8 @@ class addUnit extends React.Component {
     const fromConfig = this.getItem_select(selectOptions);
 
     this.setState({
-      selectOptions: selectOptions,
       fromConfig: fromConfig
-    });
+    })
   }
   getItem_select = (selectOptions) => {
     let fromConfig = this.state.fromConfig;
@@ -64,10 +54,11 @@ class addUnit extends React.Component {
   }
   onChange_year = (year, option) => {
     const { form } = this.props;
-
+  
     form.setFieldsValue({
       communicationType: undefined
     })
+
 
     const fromConfig = this.state.fromConfig;
 
@@ -103,103 +94,59 @@ class addUnit extends React.Component {
     }
     
   }
-  getCommunicationTypeOptions = (year) => {
-    let options = [];
-    this.state.selectOptions.communicationTypeArr.map(item => {
-      if (item.id === year) {
-        options = item.children || []
-      }
-      return item
-    })
-    return options
-  }
+
 
   // 保存
   saveForm = (e) => {
     e.preventDefault()
-    const { form } = this.props;
-
+    const { form } = this.props
+    
     form.validateFields((err, fieldsValue) => {
       if (err) return
       const postData = {
-        ...this.state.formVal,
         ...fieldsValue,
         date: fieldsValue.date && fieldsValue.date.format('YYYY-MM-DD HH:mm:ss'),
         token: this.props.token
       }
-    
-      EditDocument(postData).then(res => {
-        message.success('保存成功');
-      }).catch(res => {
-        message.error(res.msg);
-      })
-
-      if(true) return
       
+      if(true) return
+
       AddDocument(postData).then(res => {
-        this.handleModalVisible(false);
-        this.setState({ confirmLoading: true });
-      }).catch(res => {
-        this.setState({ confirmLoading: true });
+        console.log(res)
       })
      
-    });
-  }
-  edit = (vals) => {
-    const fromConfig = this.state.fromConfig;
-
-    fromConfig.map(item => {
-      item.defaultValue = vals[item.name];
-      if (item.name === 'communicationType') {
-        item.options =  this.getCommunicationTypeOptions(vals['year'])
-      }
-      return item
     })
+  }
 
+  openMoal = () => {
+    this.handleModalVisible(true);
+  }
+
+  handleOk = () => {
+    this.handleModalVisible(false);
+  }
+
+  handleCancel = () => {
+    this.handleModalVisible(false);
+  }
+
+  handleModalVisible = (flag) => {
     this.setState({
-      fromConfig: fromConfig,
-      title: '编辑来文',
-      formVal: vals
-    })
-
-    this.openMoal();
-  }
-
-  del = () => {
-    DocumentDel({
-      token: this.state.token,
-      id: ''
-    }).then(res => {
-      console.log(res)
-    }).catch(res => {
-      console.log(res)
+      visible: flag
     })
   }
 
-  /**
-   * Modal组件作为子组件的方法
-   * @onRef 绑定子组件
-   * @openMoal 打开弹层
-   * @handleModalVisible 弹出开关
-   */
   onRef = (ref) => {
     this.child = ref
   }
-  openMoal = () => {
-    this.formRef.openMoal()
-    // this.child.openMoal()
-  }
-  handleModalVisible = (flag) => {
-    this.child.handleModalVisible(flag)
+
+  clik = (e) => {
+    this.child.openMoal()
   }
 
-  ox () {
-    return (<AntModal></AntModal>)
-  }
- 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { fromConfig, confirmLoading, width } = this.state
+    const { title, width, visible, fromConfig, loading } = this.state
 
     const formItemLayout = {
       labelCol: {
@@ -211,15 +158,6 @@ class addUnit extends React.Component {
         sm: { span: 16 },
       },
     };
-
-    const modal_params = {
-      ...this.props,
-      width: width,
-      confirmLoading: confirmLoading,
-      destroyOnClose: true,
-      forceRender: true
-    }
-    
     
     return (
       <>
@@ -227,31 +165,40 @@ class addUnit extends React.Component {
           <Button
             icon='plus'
             type='primary'
-            onClick={this.ox}>
+            onClick={this.clik}>
             新建来文
           </Button>
         </div>
-        {/* <AntModal
-            {...modal_params}
-            onRef={this.onRef}
-            wrappedComponentRef={(ref) => this.formRef = ref}
-            handleOk={this.saveForm}
-            okText={'保存'}>
-            <Form 
-              {...formItemLayout} 
-              onSubmit={this.saveForm} 
-              layout='inline' 
-              className={styles.formWrap}>
-              {
-                fromConfig.map((item, index) => {
-                  let params = {...item, getFieldDecorator}
-                  return (
-                    <AntFromItem key={index} {...params} />
-                  )
-                })
-              }
-            </Form>
-        </AntModal> */}
+        <Modal
+            visible={visible}
+            title={title}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            footer={[
+              <Button key="back" onClick={() => {this.handleModalVisible(false)}}>
+                取消
+              </Button>,
+              <Button key="submit" type="primary" 
+                      loading={loading}
+                      onClick={this.saveForm}>
+                保存
+              </Button>,
+            ]}
+            width={width}
+            forceRender={true}
+            destroyOnClose={true}
+          >
+          <Form {...formItemLayout} onSubmit={this.saveForm} layout='inline'  className={styles.formWrap}>
+            {
+              fromConfig.map((item, index) => {
+                let params = {...item, getFieldDecorator}
+                return (
+                  <AntFromItem key={index} {...params} />
+                )
+              })
+            }
+          </Form>
+      </Modal>
       </>
     );
   }

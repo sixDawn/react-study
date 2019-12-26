@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Layout, Breadcrumb, Dropdown, Button, Icon } from 'antd';
-import TableList from '@components/ant/TableList'
-import TableFrom from '@components/ant/TableFrom'
-import AddUnit from './addUnit'
-import { FromConfig, getAddUnitFromConfig } from './fromConfig'
-import { TableConfig } from './tableConfig'
-import { SelectDocument, SelectDictionaryType1, SelectAdminList, SelectDictionary, FindLastNum } from '@/services/api'
-
-import { objIsEmpty } from '@utils'
+import TableList from '@components/ant/TableList';
+import TableFrom from '@components/ant/TableFrom';
+import AddUnit from './addUnit';
+import { FromConfig, getSelectOptions } from './fromConfig';
+import { TableConfig } from './tableConfig';
+import { SelectDocument } from '@/services/api';
+import { objIsEmpty } from '@utils';
 
 const { Content } = Layout; 
 
@@ -79,22 +78,8 @@ class pageList extends React.Component {
         }
       },
       FromConfig: FromConfig,
-      visible_addUnit: false,
-      loading_addUnit: false,
-      selectOptions: {
-        /**  select下拉数据框
-         * 拟办人
-         * 文件类型
-         * 密级
-         * 紧急程度
-         */
-        adminId: [],
-        communicationTypeArr: [],
-        communicationType: [],
-        rank: [],
-        urgency: []
-      },
-      AddUnitFromConfig: getAddUnitFromConfig(this)
+      addUintFromVal: null,
+      uintTitle: '新建来文'
     }
   }
   
@@ -103,170 +88,15 @@ class pageList extends React.Component {
     await this.setSelectOptions();
   }
 
-  // 获取列表数据
-  getTabelList = () => {
-    this.setState({
-      loading: true
-    });
-    let data = this.state.formValues;
-    SelectDocument(data).then(res => {
-      this.setState({
-        list: res.data,
-        loading: false,
-        pagination: {
-          ...this.state.pagination, 
-          total: res.count
-        }
-      })
-    }).catch(res => {
-    });
-  }
-
-  copyIdToVal = (arr) => {
-    arr.map(item => {
-      item.val = item.id;
-      return item
-    })
-    return arr
-  }
-  // 设置下拉框的选项
-  setSelectOptions = async () => {
-    const selectOptions = await this.getSelectOptions();
-    const fromItem = this.setFromItem_select(selectOptions);
-    const addUnitItem = this.setAddUnitItem_select(selectOptions);
-
-    this.setState({
-      FromConfig: fromItem,
-      AddUnitFromConfig: addUnitItem
-    })
-  }
-  getSelectOptions = async () => {
-    const data = {token: this.state.token}
-    const apiArr = [SelectDictionaryType1(data), SelectAdminList(data), SelectDictionary(data)]
-
-    const options = await Promise.all(apiArr).then(res => {
-      const communicationTypeArr = res[0].data[0].children;
-      const adminIdArr = res[1].data;
-      const dictionaryArr = res[2].data[0].children;
-
-      let selectOptions = this.state.selectOptions;
-
-      // 下拉选项
-      dictionaryArr.map(item => {
-        if (item.name === 'rank' || item.name === 'urgency') {
-          selectOptions[item.name] = this.copyIdToVal(item.children);
-        }
-        return item
-      });
-  
-      selectOptions = {
-        ...selectOptions,
-        adminId: adminIdArr.map(item => {
-            item.value = item.adminId
-            item.text = item.adminName
-            return item
-        }),
-        communicationTypeArr: communicationTypeArr,
-      }
-
-      this.setState({
-        selectOptions: selectOptions
-      },() => {
-        console.log(this.state)
-        console.log(214)
-      })
-      
-      return selectOptions
-
-    });
-
-    return options
-  }
-  setFromItem_select = (selectOptions) => {
-    const fromItem = this.state.FromConfig;
-    fromItem.map(item => {
-      const name = item.name;
-      if (selectOptions[name]) {
-        item.options = selectOptions[name];
-        item.loading = false;
-      }
-      return item
-    });
-    return fromItem
-  }
-  setAddUnitItem_select = (selectOptions) => {
-    let addUnitItem = this.state.AddUnitFromConfig;
-
-    selectOptions.year = selectOptions.communicationTypeArr;
-    addUnitItem.map((item) => {
-      const name = item.name;
-      if (selectOptions[name]) {
-        item.options = selectOptions[name];
-        item.loading = false;
-      }
-      return item
-    })
-    return addUnitItem;
-  }
-  setCommunicationType = (year, option) => {
-    const addUnitItem = this.state.AddUnitFromConfig;
-
-    addUnitItem.map((item) => {
-        if (item.name === "communicationType" && option) {
-          item.options = option.props.item.children || [];
-          item.loading = false;
-        }
-        return item;
-    });
-
-    this.setState({
-        AddUnitFromConfig: addUnitItem
-    });
-  }
-  setNum = (val, option) => {
-    const { token, AddUnitFromConfig } = this.state;
-
-    FindLastNum({
-      token: token,
-      communicationType: val
-    }).then(res => {
-      AddUnitFromConfig.map((item) => {
-        if (item.name === "num") {
-          item.defaultValue = res.num
-        }
-        return item;
-      });
-      
-      this.setState({
-        AddUnitFromConfig: AddUnitFromConfig
-      });
-    })
-  }
-
-  
-  // 设置查询表单默认值
-  setDefaultValue = (data) => {
-    let FromInfo = this.state.FromConfig;
-    FromInfo.map(item => {
-      if (data) {
-        Object.keys(data).forEach(key => {
-          if(item.name === key) {
-            item.defaultValue = data[key]
-          }
-        })
-      } else {
-        item.defaultValue = null;
-      }
-      return item
-    });
-    return FromInfo
-  }
-  // 查询表单
+  /**
+   * 数据查询表单相关
+   * @setTableFrom 设置表单
+   * @setSelectOptions 设置表单中的select下拉框
+   */
   setTableFrom = () => {
     const fromConfig = {
       FromConfig: this.state.FromConfig,
       handleSearch: (vals) => {
- 
         const data = {
           ...this.state.formValues,
           ...vals,
@@ -281,11 +111,7 @@ class pageList extends React.Component {
             ...this.state.pagination,
             current: 1
           },
-          FromConfig: this.setDefaultValue(data),
-          formValues: {
-            ...this.state.formValues,
-            ...data
-          }
+          formValues: data
         }, () =>{
           this.getTabelList();
         })
@@ -296,7 +122,6 @@ class pageList extends React.Component {
             ...this.state.pagination,
             current: 1
           },
-          FromConfig: this.setDefaultValue(),
           formValues: {
             ...vals
           }
@@ -311,74 +136,33 @@ class pageList extends React.Component {
       <TableFrom {...fromConfig}/>  
     )
   }
-
-  // 数据列表_操作项
-  menuConfig = [
-    {
-      text: '打印',
-      key: 'printing',
-      fn: (record) => {
-      }
-    }, {
-      text: '打印2页',
-      key: 'printpages',
-      fn: (record) => {
-      }
-    }, {
-      text: '呈批表',
-      key: 'batchTable',
-      fn: (record) => {
-      }
-    }, {
-      text: '文件分发表',
-      key: 'documentDistribution',
-      fn: (record) => {
-      }
-    }, {
-      text: '复制',
-      key: 'copy',
-      fn: (record) => {
-      }
-    }, {
-      text: '删除',
-      key: 'delete',
-      fn: (record) => {
-      }
-    }, {
-      text: '编辑',
-      key: 'edit',
-      fn: (record) => {
-        this.setCommunicationType(record.year);
-
-        this.state.AddUnitFromConfig.map(item => {
-          if (record[item.name]) {
-            item.defaultValue = record[item.name]
-          }
-          return item
-        });
-        this.handleModalVisible('visible_addUnit', true);
-      }
-    }
-  ]
-  // 数据列表_操作
-  handleMenu = (record) => {
-    return (
-      <ul className={"ant-dropdown-menu ant-dropdown-menu-light ant-dropdown-menu-root ant-dropdown-menu-vertical"}>
-        {
-          this.menuConfig.map(item => {
-            return (
-              <li className="ant-dropdown-menu-item" 
-                key={item.key} 
-                onClick={() => item.fn(record)}>
-                {item.text}
-              </li>
-            )
-          })
-        }
-      </ul>
-    )
+  setSelectOptions = async () => {
+    const selectOptions = await getSelectOptions();
+    const fromItem = this.getFromItem_select(selectOptions);
+  
+    this.setState({
+      FromConfig: fromItem
+    })
   }
-  // 数据列表
+  getFromItem_select = (selectOptions) => {
+    const fromItem = this.state.FromConfig;
+    fromItem.map(item => {
+      const name = item.name;
+      if (selectOptions[name]) {
+        item.options = selectOptions[name];
+        item.loading = false;
+      }
+      return item
+    });
+    return fromItem
+  }
+
+  /**
+   * tabel数据列表
+   * @setTableList 设置数据列表
+   * @getTabelList 获取列表数据
+   * @handleMenu 数据列表_操作项
+   */
   setTableList = () => {
     TableConfig[TableConfig.length - 1].render = (text, record, index) => {
       return (
@@ -415,15 +199,93 @@ class pageList extends React.Component {
     return (
       <TableList {...tableConfig}/>
     )
-  }
-
-  // 新建来文
-  addUnit = () => {
+  }  
+  getTabelList = () => {
     this.setState({
-      visible_addUnit: true
-    })
+      loading: true
+    });
+    let data = this.state.formValues;
+    SelectDocument(data).then(res => {
+      this.setState({
+        list: res.data,
+        loading: false,
+        pagination: {
+          ...this.state.pagination, 
+          total: res.count
+        }
+      })
+    }).catch(res => {
+    });
+  }
+  handleMenu = (record) => {
+    return (
+      <ul className={"ant-dropdown-menu ant-dropdown-menu-light ant-dropdown-menu-root ant-dropdown-menu-vertical"}>
+        {
+          this.menuConfig.map(item => {
+            return (
+              <li className="ant-dropdown-menu-item" 
+                key={item.key} 
+                onClick={() => item.fn(record)}>
+                {item.text}
+              </li>
+            )
+          })
+        }
+      </ul>
+    )
+  }
+  menuConfig = [
+    {
+      text: '打印',
+      key: 'printing',
+      fn: (record) => {
+      }
+    }, {
+      text: '打印2页',
+      key: 'printpages',
+      fn: (record) => {
+      }
+    }, {
+      text: '呈批表',
+      key: 'batchTable',
+      fn: (record) => {
+      }
+    }, {
+      text: '文件分发表',
+      key: 'documentDistribution',
+      fn: (record) => {
+      }
+    }, {
+      text: '复制',
+      key: 'copy',
+      fn: (record) => {
+      }
+    }, {
+      text: '删除',
+      key: 'delete',
+      fn: (record) => {
+      }
+    }, {
+      text: '编辑',
+      key: 'edit',
+      fn: (record) => {
+        this.setState({
+          uintTitle: '编辑来文'
+        }, () => {
+          this.child.edit(record);
+        })
+      }
+    }
+  ]
+  
+  onRef = (ref) => {
+    this.child = ref
+  }
+  openMoal = () => {
+    this.child.openMoal()
   }
 
+  
   handleModalVisible = (key, flag) => {
     let obj = {}
     obj[key] = flag;
@@ -433,30 +295,11 @@ class pageList extends React.Component {
   }
 
   render() {
-    const { visible_addUnit, loading_addUnit, selectOptions, token } = this.state;
-    console.log(selectOptions)
+    const { token, addUintFromVal, uintTitle } = this.state;
     const addUintProps = {
-      title: '新建来文',
-      visible: visible_addUnit,
+      title: uintTitle,
       token: token,
-      handleOk: () => {
-        this.handleModalVisible('visible_addUnit', false);
-      },
-      handleCancel: () => {
-        this.handleModalVisible('visible_addUnit', false);
-      },
-      width: 1000,
-      footer: [
-        <Button key="back" 
-          onClick={() => {this.handleModalVisible('visible_addUnit', false)}}>
-          取消
-        </Button>,
-        <Button key="submit" type="primary" 
-          loading={loading_addUnit} >
-          保存
-        </Button>,
-      ],
-      selectOptions: selectOptions,
+      addUintFromVal: addUintFromVal
     }
 
     return (
@@ -468,15 +311,7 @@ class pageList extends React.Component {
         <div className="tabel-base-wrap">
           {this.setTableFrom()}
           
-          <div className={'tableListOperator'}>
-            <Button
-              icon='plus'
-              type='primary'
-              onClick={() => this.addUnit()}>
-              新建来文
-            </Button>
-          </div>
-          <AddUnit  {...addUintProps} />
+          <AddUnit onRef={this.onRef} {...addUintProps} />
 
           {this.setTableList()}
           

@@ -8,27 +8,51 @@
       margin-left: 8px;
     }
 
+    .fromWrapRetract {
+      height: 46px;
+      overflow: hidden;
+      .btnGroup {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+
+    .fromWrapOpen {
+      .btnGroup {
+        width: 100%;
+      }
+    }
+
+    .btnGroup {
+      position: relative;
+      background: #fff;
+      text-align: right;
+      height: 46px;
+    }
+    
+
     .ant-form-item {
       display: flex;
       margin-right: 0;
       margin-bottom: 12px;
       .ant-form-item-control-wrapper {
         flex: 1;
+        .ant-form-item-control{
+          line-height: 34px;
+        }
       }
     }
 
     
 
-     .ant-calendar-picker{
-       width: 100%;
-     }
+    .ant-calendar-picker{
+      width: 100%;
+    }
     .text-align-right{
       text-align: right;
     }
-    .btnGroupDown {
-      width: 100%;
-      text-align: right;
-    }
+    
   }
 
   .submitButtons {

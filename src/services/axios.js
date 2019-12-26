@@ -3,6 +3,7 @@
  */
 import axios from 'axios'
 import qs from 'qs'
+import { message } from 'antd';
 
 const service = axios.create({
   baseURL: '',
@@ -56,6 +57,11 @@ service.interceptors.response.use(
       }
     },
     error => {
+      if (!error.response) {
+        message.destroy();
+        message.error('请求超时，请稍后重试');
+        return Promise.reject(error);
+      }
       if (error.response.status) {
         switch (error.response.status) {
           case 500:

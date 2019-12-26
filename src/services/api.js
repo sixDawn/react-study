@@ -116,3 +116,10 @@ export const FileType = data => {
     })
 }
 
+export const EditDocument = data => {
+    return service({
+        url: INTER.editDocument,
+        method: 'post',
+        data: data
+    })
+}

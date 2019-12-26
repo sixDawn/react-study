@@ -35,27 +35,23 @@ class TableFrom extends Component {
 
   // 重置
   handleFormReset = (e) => {
-    e.preventDefault()
-    const { form } = this.props
-    form.resetFields()
+    e.preventDefault();
+    const { form } = this.props;
+    form.resetFields();
     
     let vals = form.getFieldsValue();
-    Object.keys(vals).forEach((key) => {
-      vals[key] && (vals[key] = null)
-    });
-
     this.props.handleFormReset(vals);
   }
 
   render () {
     const { getFieldDecorator } = this.props.form;
+    const { isBtnGroupUp } = this.state;
     const FromItemArr = [...this.state.FromItemArr];
-    if (!this.state.isBtnGroupUp) {
-      FromItemArr.length = 3
-    }
+    
     return (
       <Form onSubmit={this.handleSearch} layout='inline' className={styles.tableListForm}>
-        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
+        <Row gutter={{ md: 6, lg: 24, xl: 48 }}
+          className={`${isBtnGroupUp ? 'fromWrapOpen' : 'fromWrapRetract'}`}>
           {
             FromItemArr.map((item, index) => {
               let params = {...item, getFieldDecorator}
@@ -67,7 +63,7 @@ class TableFrom extends Component {
             })
           }
           <Col md={6} sm={24} 
-               className={`text-align-right ${this.state.isBtnGroupUp ? 'btnGroupDown' : 'btnGroupUp'}`}>
+               className={`text-align-right btnGroup`}>
             <span className={styles.submitButtons}>
               <Button type='primary' htmlType='submit'>
                   查询

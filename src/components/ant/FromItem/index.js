@@ -124,7 +124,8 @@ function setinput(props) {
             )
         default:
             return (
-                <span></span>
+                <>
+                </>
             )
     }
 }
@@ -134,6 +135,7 @@ export default class AntFromItem extends Component {
     static defaultProps = {
         label: '',
         name: '',
+        required: undefined,
         type: 'text',
         tag: 'input',
         autoComplete: 'off',
@@ -167,9 +169,9 @@ export default class AntFromItem extends Component {
     }
 
     setItem = (props) => {
-        const { label, style, className } = props;
+        const { label, style, className, required} = props;
         return (
-            <FormItem label={label} style={style} className={className}>
+            <FormItem required={required} label={label} style={style} className={className}>
                 {setinput(props)} 
             </FormItem>
         )
