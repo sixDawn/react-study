@@ -162,6 +162,10 @@ class addUnit extends React.Component {
       formVal: vals
     })
 
+    /* this.props.form.setFieldsValue({
+
+    }) */
+
     this.openMoal();
   }
 
@@ -186,16 +190,13 @@ class addUnit extends React.Component {
     this.child = ref
   }
   openMoal = () => {
-    this.formRef.openMoal()
-    // this.child.openMoal()
+    // this.formRef.openMoal()
+    this.child.openMoal()
   }
   handleModalVisible = (flag) => {
     this.child.handleModalVisible(flag)
   }
 
-  ox () {
-    return (<AntModal></AntModal>)
-  }
  
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -220,18 +221,17 @@ class addUnit extends React.Component {
       forceRender: true
     }
     
-    
     return (
       <>
         <div className={'tableListOperator'}>
           <Button
             icon='plus'
             type='primary'
-            onClick={this.ox}>
+            onClick={this.openMoal}>
             新建来文
           </Button>
         </div>
-        {/* <AntModal
+        <AntModal
             {...modal_params}
             onRef={this.onRef}
             wrappedComponentRef={(ref) => this.formRef = ref}
@@ -251,7 +251,7 @@ class addUnit extends React.Component {
                 })
               }
             </Form>
-        </AntModal> */}
+        </AntModal>
       </>
     );
   }

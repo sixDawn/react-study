@@ -209,12 +209,12 @@ export const getAddUnitFromConfig = (self) => {
 
     formItem.map((item) => {
         if(item.tag === "InputGroup") {
-            // formItem = [...formItem, ...item.InputGroup]
-            item.InputGroup.forEach(cell => {
+            formItem = [...formItem, ...item.InputGroup]
+            /* item.InputGroup.forEach(cell => {
                 if(cell.tag && cell.tag !== 'input') {
                     formItem.push(cell)
                 }
-            })
+            }) */
         }
         return item
     });

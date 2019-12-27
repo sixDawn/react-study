@@ -44,18 +44,17 @@ class AntModal extends React.Component {
 
   render() {
     const { visible } = this.state;
-    // const { handleOk } = this.props;
+    const { handleOk } = this.props;
     return (
         <>
-        {this.openMoal()}
         <Modal {...this.props} 
             visible={visible} 
-            // onOk={handleOk || this.handleOk}
+            onOk={handleOk || this.handleOk}
             onCancel={this.handleCancel}>
                 {
                     React.Children.map(this.props.children, function(child){
                         return child
-                    })                   
+                    })
                 }
         </Modal>
         </>
